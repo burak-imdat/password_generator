@@ -1,13 +1,13 @@
 # import random and string module
 import string
 import random
-# import tkinker for window
-import tkinter as tk
+# importing PyQt5 for new window and creating an application
+from PyQt5 import QtWidgets
 
 
 # Creating a function for generating passwords
 def generate_password():
-    password_length = int(password_length_entry.get())
+    password_length = int(password_length_entry.text())
 
     # defining all characters
     all_characters = string.ascii_letters + string.digits + string.punctuation
@@ -19,25 +19,32 @@ def generate_password():
     with open('passwords.txt', 'a') as f:
         f.write('Your ' + str(password_length) + '-characters password: ' + password + '\n')
 
-    password_label.config(text='Generated Password: ' + password)
+    password_label.setText('Generated Password: ' + password)
 
 
 # Creating a 350x200 window
-root = tk.Tk()
-root.title('Random Password Generator')
-root.geometry('350x200')
+app = QtWidgets.QApplication([])
+window = QtWidgets.QWidget()
+window.setWindowTitle('Random Password Generator')
+window.setGeometry(300,300,350,200)
 
-password_length_label = tk.Label(root, text='Enter the length of the password: ')
-password_length_label.pack()
+layout = QtWidgets.QVBoxLayout()
 
-password_length_entry = tk.Entry(root)
-password_length_entry.pack()
+password_length_label = QtWidgets.QLabel('Enter the length of the password: ')
+layout.addWidget(password_length_label)
+
+password_length_entry = QtWidgets.QLineEdit()
+layout.addWidget(password_length_entry)
 
 # Creating password generate button
-generate_button = tk.Button(root, text='Generate Password', command=generate_password)
-generate_button.pack()
+generate_button = QtWidgets.QPushButton('Generate Password')
+generate_button.clicked.connect(generate_password)
+layout.addWidget(generate_button)
 
-password_label = tk.Label(root, text='')
-password_label.pack()
+password_label = QtWidgets.QLabel("")
+layout.addWidget(password_label)
 
-root.mainloop()
+window.setLayout(layout)
+window.show()
+
+app.exec_()
